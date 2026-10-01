@@ -523,7 +523,58 @@
       }
     ];
 
-    function ChamberBridgeApp() {
+    // --- LIVE GOOGLE SHEET FEED (Apps Script web app, 'ChamberConnect Engine' tab) ---
+// Sheet is the source of truth. Edits in the sheet appear here within SHEET_POLL_MS.
+const SHEET_FEED_URL = "https://script.google.com/macros/s/AKfycbyEeKvERSU3rmepnvzgWVcFm8XHGCAvsEuV0PMEpL1FRIVNKlyjuSh11gYZ9A_45zYN/exec";
+const SHEET_FEED_TOKEN = "9f4ba8439d012e94c8332269ab573ca6";
+const SHEET_POLL_MS = 15000;
+const POD_BY_COHORT = { A: "Pod Alpha (Tues Morn)", B: "Pod Beta (Wed Lunch)", C: "Pod Gamma (Thurs Morn)", D: "Pod Delta (Friday Noon)" };
+
+function mapSheetMember(row, i) {
+  const letter = ((row.cohort || "").match(/Cohort\s*([A-D])/i) || [])[1];
+  const pod = POD_BY_COHORT[(letter || "A").toUpperCase()];
+  const vertical = row.vertical || "General";
+  const id = String(row.memberId || ("sheet-" + i));
+  return {
+    id: id,
+    name: row.name || row.company || "Member",
+    title: row.title || "",
+    company: row.company || "",
+    vertical: vertical,
+    category: vertical,
+    pod: pod,
+    sequestered: /sequestered/i.test(row.sequestered || ""),
+    isMember: true,
+    email: row.email || "",
+    phone: row.phone || "",
+    website: row.website || "",
+    city: "New Castle County, DE",
+    memberId: id,
+    micUrl: "https://nccccde.chambermaster.com/mic?memid=" + encodeURIComponent(id),
+    bio: (row.company || "Member") + " - " + vertical + (row.targetVertical ? ". Seeking introductions in " + row.targetVertical + "." : "."),
+    synergies: row.targetVertical ? [row.targetVertical] : [],
+    powerScore: 75,
+    avgDealSize: 15000,
+    karmaScore: 80,
+    activeConsortiums: 0
+  };
+}
+
+function showSheetStatus(state, count) {
+  try {
+    let el = document.getElementById("sheet-status");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "sheet-status";
+      el.style.cssText = "position:fixed;left:12px;bottom:12px;z-index:9999;padding:6px 10px;border-radius:999px;font:600 11px system-ui,sans-serif;background:#0f172a;color:#fff;opacity:.9;pointer-events:none";
+      document.body.appendChild(el);
+    }
+    el.textContent = state === "live" ? ("\u25CF Live from Google Sheet \u00B7 " + count + " members \u00B7 " + new Date().toLocaleTimeString()) : "\u25CB Sheet offline - showing last good data";
+    el.style.background = state === "live" ? "#065f46" : "#92400e";
+  } catch (e) { /* status badge is cosmetic */ }
+}
+
+function ChamberBridgeApp() {
       // 1. Core Verified Members Registry
       const [members, setMembers] = useState(INITIAL_MEMBERS);
       
@@ -579,6 +630,34 @@
       // 7. Member Edit Modal States
       const [editingMember, setEditingMember] = useState(null);
       const [newMemberFormOpen, setNewMemberFormOpen] = useState(false);
+
+      // Live sync: poll the Google Sheet feed; apply only when the sheet version changes
+      const sheetVersionRef = React.useRef(null);
+      useEffect(() => {
+        let stopped = false;
+        const pull = async () => {
+          try {
+            const res = await fetch(SHEET_FEED_URL + "?token=" + encodeURIComponent(SHEET_FEED_TOKEN) + "&t=" + Date.now());
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            const data = await res.json();
+            if (!data.ok || !Array.isArray(data.members) || data.members.length === 0) throw new Error(data.error || "empty feed");
+            if (stopped) return;
+            if (data.version !== sheetVersionRef.current) {
+              sheetVersionRef.current = data.version;
+              const owner = INITIAL_MEMBERS[0];
+              const mapped = data.members.map(mapSheetMember).filter(m => m.id !== owner.id);
+              setMembers([owner, ...mapped]);
+            }
+            showSheetStatus("live", data.members.length);
+          } catch (err) {
+            console.warn("Sheet feed unavailable, keeping last good data:", err);
+            showSheetStatus("offline", 0);
+          }
+        };
+        pull();
+        const timer = setInterval(pull, SHEET_POLL_MS);
+        return () => { stopped = true; clearInterval(timer); };
+      }, []);
 
       // Keep perspective locked to logged-in user unless Admin Mode is activated
       useEffect(() => {
