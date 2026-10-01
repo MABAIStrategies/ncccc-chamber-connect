@@ -525,8 +525,8 @@
 
     // --- LIVE GOOGLE SHEET FEED (Apps Script web app, 'ChamberConnect Engine' tab) ---
 // Sheet is the source of truth. Edits in the sheet appear here within SHEET_POLL_MS.
-const SHEET_FEED_URL = "https://script.google.com/macros/s/AKfycbyEeKvERSU3rmepnvzgWVcFm8XHGCAvsEuV0PMEpL1FRIVNKlyjuSh11gYZ9A_45zYN/exec";
-const SHEET_FEED_TOKEN = "9f4ba8439d012e94c8332269ab573ca6";
+const SHEET_FEED_URL = "/api/members"; // Vercel serverless proxy; Apps Script URL and token live in server env vars
+
 const SHEET_POLL_MS = 15000;
 const POD_BY_COHORT = { A: "Pod Alpha (Tues Morn)", B: "Pod Beta (Wed Lunch)", C: "Pod Gamma (Thurs Morn)", D: "Pod Delta (Friday Noon)" };
 
@@ -637,7 +637,7 @@ function ChamberBridgeApp() {
         let stopped = false;
         const pull = async () => {
           try {
-            const res = await fetch(SHEET_FEED_URL + "?token=" + encodeURIComponent(SHEET_FEED_TOKEN) + "&t=" + Date.now());
+            const res = await fetch(SHEET_FEED_URL, { cache: "no-store" });
             if (!res.ok) throw new Error("HTTP " + res.status);
             const data = await res.json();
             if (!data.ok || !Array.isArray(data.members) || data.members.length === 0) throw new Error(data.error || "empty feed");
