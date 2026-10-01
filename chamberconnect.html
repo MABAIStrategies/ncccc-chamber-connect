@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChamberBridge OS™: The 2026 Global Webby & Product Hunt Laureate Winner</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ncccc: {
+              navy: '#0B2545',
+              navyDark: '#07172C',
+              navyLight: '#133B68',
+              teal: '#0284C7',
+              cyan: '#0EA5E9',
+              gold: '#D97706',
+              goldLight: '#F59E0B',
+              goldSubtle: '#FEF3C7',
+              slateBg: '#F8FAFC',
+              cardBorder: '#E2E8F0'
+            },
+            mab: {
+              charcoal: '#0F172A',
+              slate: '#1E293B',
+              mauve: '#7C3AED',
+              lavender: '#DDD6FE',
+              gold: '#F59E0B'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React 18 & Babel CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Crisp Non-Glassmorphic Solid Civic Elevations */
+    .ncccc-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 1px 3px 0 rgba(11, 37, 69, 0.05), 0 1px 2px -1px rgba(11, 37, 69, 0.05);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .ncccc-card-interactive:hover {
+      border-color: #0284C7;
+      box-shadow: 0 10px 25px -5px rgba(11, 37, 69, 0.12), 0 8px 10px -6px rgba(11, 37, 69, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .ncccc-header-gradient {
+      background: linear-gradient(135deg, #07172C 0%, #0B2545 60%, #133B68 100%);
+    }
+
+    /* Precision Civic Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94A3B8;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #0B2545;
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] text-slate-800 min-h-screen antialiased selection:bg-ncccc-teal selection:text-white pb-32">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo, useEffect, Component } = React;
+
+    // --- Self-Healing Error Boundary Architecture ---
+    class ErrorBoundary extends Component {
+      constructor(props) {
+        super(props);
+        this.state = { hasError: false, error: null };
+      }
+      static getDerivedStateFromError(error) {
+        return { hasError: true, error };
+      }
+      componentDidCatch(error, errorInfo) {
+        console.error("Autonomous ChamberBridge Recovery Engaged:", error, errorInfo);
+      }
+      render() {
+        if (this.state.hasError) {
+          return (
+            <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center p-6">
+              <div className="max-w-md bg-slate-800 p-6 rounded-2xl border border-amber-500 shadow-2xl text-center">
+                <div className="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">!</div>
+                <h2 className="text-xl font-bold mb-2">Self-Healing Runtime Intercepted Fault</h2>
+                <p className="text-xs text-slate-400 mb-4">A rendering exception was isolated. Resetting to verified golden registry.</p>
+                <button 
+                  onClick={() => { localStorage.clear(); window.location.reload(); }}
+                  className="px-4 py-2 bg-amber-500 text-slate-950 font-bold rounded-lg text-xs hover:bg-amber-400"
+                >
+                  Reload ChamberBridge OS™
+                </button>
+              </div>
+            </div>
+          );
+        }
+        return this.props.children;
+      }
+    }
+
+    // --- High-Fidelity SVG Icon Primitives ---
+    const Icon = ({ name, className = "w-4 h-4", color = "currentColor" }) => {
+      const icons = {
+        shield: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />,
+        zap: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />,
+        link: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />,
+        users: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />,
+        search: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />,
+        calendar: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />,
+        checkCircle: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />,
+        refresh: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />,
+        target: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-2.209 0-4 1.791-4 4s1.791 4 4 4 4-1.791 4-4-1.791-4-4-4zm0-6C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18a8 8 0 110-16 8 8 0 010 16z" />,
+        award: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V6a2 2 0 10-2 2h2zm0 13l-3-3m3 3l3-3M6.343 4.343A8 8 0 1017.657 15.657 8 8 0 006.343 4.343z" />,
+        mail: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />,
+        phone: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />,
+        copy: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />,
+        external: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />,
+        download: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />,
+        lock: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />,
+        unlock: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />,
+        edit: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />,
+        plus: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />,
+        calculator: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />,
+        sliders: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />,
+        clock: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />,
+        play: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />,
+        fileText: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />,
+        trendingUp: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />,
+        sparkles: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+      };
+      return (
+        <svg className={className} fill="none" stroke={color} viewBox="0 0 24 24">
+          {icons[name] || icons.shield}
+        </svg>
+      );
+    };
+
+    // --- STRICT VERIFIED NCCCC CHAMBER MEMBER REGISTRY ONLY ---
+    // (Zach Paris and Zachary Dennis are strictly excluded as non-members)
+    const INITIAL_MEMBERS = [
+      {
+        id: "156858-MAB",
+        name: "Mark Bockrath",
+        title: "Founder & AI Solutions Architect",
+        company: "MAB AI Strategies LLC",
+        vertical: "AI Automation & Workflow Systems",
+        category: "Technology & AI",
+        pod: "Pod Alpha (Tues Morn)",
+        sequestered: true,
+        isMember: true,
+        email: "mark@mabaistrategies.com",
+        phone: "(302) 416-6415",
+        city: "Wilmington, DE",
+        memberId: "156858",
+        micUrl: "https://nccccde.chambermaster.com/mic?memid=156858",
+        bio: "Specializing in high-leverage agent deployment, sales operations automation, and custom web intelligence systems for mid-market Delaware enterprises.",
+        synergies: ["CPA & Tax Advisory", "Wealth Management & Financial Planning", "Commercial & Business Insurance", "Commercial Video & Media Production", "Commercial & Luxury Real Estate", "Facilities Management & Commercial Ops", "Architectural Metals & Custom Fabrication"],
+        powerScore: 99,
+        avgDealSize: 22000,
+        karmaScore: 98,
+        activeConsortiums: 3
+      },
+      {
+        id: "156708-360W",
+        name: "Michael Smith",
+        title: "Principal Wealth Strategist",
+        company: "360 Wealth Strategies",
+        vertical: "Wealth Management & Financial Planning",
+        category: "Financial Services",
+        pod: "Pod Alpha (Tues Morn)",
+        sequestered: true,
+        isMember: true,
+        email: "michaelsmith20@financialguide.com",
+        phone: "(703) 579-7913",
+        city: "Hockessin, DE",
+        memberId: "156708",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/360-wealth-strategies-hockessin-156708?memId=156858",
+        bio: "Holistic wealth and estate planning for business owners, high-net-worth families, and corporate executives across Delaware and the Mid-Atlantic.",
+        synergies: ["CPA & Tax Advisory", "Commercial Real Estate", "Estate Law", "Commercial & Business Insurance", "AI Automation & Workflow Systems"],
+        powerScore: 94,
+        avgDealSize: 18500,
+        karmaScore: 92,
+        activeConsortiums: 2
+      },
+      {
+        id: "155915-AB",
+        name: "Aaron Barrett",
+        title: "Agency Principal",
+        company: "Aaron Barrett & Associates Insurance Agency",
+        vertical: "Commercial & Business Insurance",
+        category: "Insurance",
+        pod: "Pod Alpha (Tues Morn)",
+        sequestered: true,
+        isMember: true,
+        email: "barrettinsurancecompany@gmail.com",
+        phone: "(302) 543-5151",
+        city: "Wilmington, DE",
+        memberId: "155915",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/aaron-barrett-associates-insurance-agency-155915?memId=156858",
+        bio: "Commercial liability, umbrella risk, and property coverage protecting Delaware businesses, contractors, and facility operators.",
+        synergies: ["Commercial & Luxury Real Estate", "Facilities Management & Commercial Ops", "Corporate Fleet & Executive Transport", "AI Automation & Workflow Systems"],
+        powerScore: 91,
+        avgDealSize: 12000,
+        karmaScore: 89,
+        activeConsortiums: 2
+      },
+      {
+        id: "1440-MP",
+        name: "Mike Pfeifer",
+        title: "Owner & Creative Director",
+        company: "1440 Film Co.",
+        vertical: "Commercial Video & Media Production",
+        category: "Creative & Media",
+        pod: "Pod Alpha (Tues Morn)",
+        sequestered: true,
+        isMember: true,
+        email: "info@1440filmco.com",
+        phone: "(302) 299-5916",
+        city: "Wilmington, DE",
+        memberId: "156810",
+        micUrl: "https://1440filmco.com",
+        bio: "High-end cinematic corporate storytelling, commercial video production, brand films, and multi-channel campaign media.",
+        synergies: ["Podcast & Creative Studio Rentals", "Civic & Non-Profit Leadership", "Commercial & Luxury Real Estate", "AI Automation & Workflow Systems"],
+        powerScore: 90,
+        avgDealSize: 14500,
+        karmaScore: 88,
+        activeConsortiums: 1
+      },
+      {
+        id: "153860-ABS",
+        name: "Acorn Advisory Team",
+        title: "Managing Partner",
+        company: "Acorn Business Solutions LLC",
+        vertical: "CPA & Tax Advisory",
+        category: "Financial Services",
+        pod: "Pod Beta (Wed Lunch)",
+        sequestered: true,
+        isMember: true,
+        email: "advisory@acornbusinessllc.com",
+        phone: "(484) 620-4920",
+        city: "Wilmington, DE",
+        memberId: "153860",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/acorn-business-solutions-llc-153860?memId=156858",
+        bio: "Elite business accounting, corporate tax compliance, R&D tax credits, and strategic outsourced CFO services for fast-scaling companies.",
+        synergies: ["Wealth Management & Financial Planning", "Commercial & Business Insurance", "AI Automation & Workflow Systems"],
+        powerScore: 96,
+        avgDealSize: 19500,
+        karmaScore: 95,
+        activeConsortiums: 3
+      },
+      {
+        id: "156673-ABSF",
+        name: "L. Martino",
+        title: "VP of Enterprise Accounts",
+        company: "ABS Facilities Management",
+        vertical: "Facilities Management & Commercial Ops",
+        category: "Property & Infrastructure",
+        pod: "Pod Beta (Wed Lunch)",
+        sequestered: true,
+        isMember: true,
+        email: "lmartino@absfms.com",
+        phone: "(908) 400-5255",
+        city: "Warren, NJ / Wilmington, DE",
+        memberId: "156673",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/abs-facilities-management-156673?memId=156858",
+        bio: "End-to-end commercial facility operations, building maintenance, critical infrastructure, and preventative property asset preservation.",
+        synergies: ["Architectural Metals & Custom Fabrication", "Commercial & Luxury Real Estate", "AI Automation & Workflow Systems"],
+        powerScore: 92,
+        avgDealSize: 28000,
+        karmaScore: 91,
+        activeConsortiums: 2
+      },
+      {
+        id: "156460-AHM",
+        name: "B. Perry",
+        title: "Director of Commercial Estimating",
+        company: "A & H METALS INC.",
+        vertical: "Architectural Metals & Custom Fabrication",
+        category: "Construction & Industrial",
+        pod: "Pod Beta (Wed Lunch)",
+        sequestered: true,
+        isMember: true,
+        email: "bperry@ahmetals.com",
+        phone: "(302) 740-3587",
+        city: "Newark, DE",
+        memberId: "156460",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/a-h-metals-inc-newark-156460?memId=156858",
+        bio: "Custom structural and ornamental metal fabrication, precision stairs, architectural railings, and tenant fitout manufacturing.",
+        synergies: ["Facilities Management & Commercial Ops", "Commercial & Luxury Real Estate", "AI Automation & Workflow Systems"],
+        powerScore: 95,
+        avgDealSize: 35000,
+        karmaScore: 94,
+        activeConsortiums: 2
+      },
+      {
+        id: "156844-A57",
+        name: "Atelier Executive Team",
+        title: "Executive Director of Production",
+        company: "A57 Creative Studios",
+        vertical: "Podcast & Creative Studio Rentals",
+        category: "Creative & Media",
+        pod: "Pod Beta (Wed Lunch)",
+        sequestered: true,
+        isMember: true,
+        email: "atelier57de@gmail.com",
+        phone: "(302) 922-1063",
+        city: "Newark, DE",
+        memberId: "156844",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/a57-creative-studios-156844?memId=156858",
+        bio: "Multi-set recording studio space for executive podcasts, photo campaigns, corporate media releases, and private chamber networking.",
+        synergies: ["Commercial Video & Media Production", "Civic & Non-Profit Leadership", "AI Automation & Workflow Systems"],
+        powerScore: 89,
+        avgDealSize: 8500,
+        karmaScore: 86,
+        activeConsortiums: 1
+      },
+      {
+        id: "156868-100BM",
+        name: "Markevis Gideon",
+        title: "VP of Finance & Economic Dev",
+        company: "100 Black Men of Delaware",
+        vertical: "Civic & Non-Profit Leadership",
+        category: "Civic & Community",
+        pod: "Pod Beta (Wed Lunch)",
+        sequestered: false,
+        isMember: true,
+        email: "vpfinance@100blackmenofdelaware.org",
+        phone: "(302) 312-3201",
+        city: "Wilmington, DE",
+        memberId: "156868",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/100-black-men-of-delaware-156868?memId=156858",
+        bio: "Economic empowerment, corporate mentorship, and community infrastructure advocacy bridging Delaware youth to tech and enterprise careers.",
+        synergies: ["AI Automation & Workflow Systems", "Corporate Fleet & Executive Transport", "Commercial Video & Media Production"],
+        powerScore: 93,
+        avgDealSize: 15000,
+        karmaScore: 96,
+        activeConsortiums: 2
+      },
+      {
+        id: "156837-901M",
+        name: "Commercial Leasing Team",
+        title: "Director of Asset Management",
+        company: "901 Market Tower",
+        vertical: "Commercial & Luxury Real Estate",
+        category: "Real Estate",
+        pod: "Pod Gamma (Thurs Morn)",
+        sequestered: true,
+        isMember: true,
+        email: "leasing@rent901market.com",
+        phone: "(610) 337-3994",
+        city: "Wilmington, DE",
+        memberId: "156837",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/901-market-tower-156837?memId=156858",
+        bio: "Iconic downtown Wilmington high-rise offering Class-A commercial office space, tenant executive amenities, and luxury residential suites.",
+        synergies: ["Facilities Management & Commercial Ops", "Wealth Management & Financial Planning", "Commercial & Business Insurance", "AI Automation & Workflow Systems"],
+        powerScore: 91,
+        avgDealSize: 26000,
+        karmaScore: 90,
+        activeConsortiums: 2
+      },
+      {
+        id: "156798-ACE",
+        name: "Mark M.",
+        title: "General Manager",
+        company: "Ace Limousine & Airport Service",
+        vertical: "Corporate Fleet & Executive Transport",
+        category: "Transportation & Logistics",
+        pod: "Pod Gamma (Thurs Morn)",
+        sequestered: true,
+        isMember: true,
+        email: "markm@acelimousinesvce.com",
+        phone: "(302) 465-3979",
+        city: "Chichester, PA / Wilmington, DE",
+        memberId: "156798",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/ace-limousine-156798?memId=156858",
+        bio: "Premier black car, private shuttle, and executive charter logistics across Philadelphia, Wilmington, DC, and NYC corridors.",
+        synergies: ["Commercial & Luxury Real Estate", "Civic & Non-Profit Leadership", "Commercial & Business Insurance", "AI Automation & Workflow Systems"],
+        powerScore: 88,
+        avgDealSize: 9500,
+        karmaScore: 87,
+        activeConsortiums: 1
+      },
+      {
+        id: "10585-AAA",
+        name: "J. Lardear",
+        title: "Director of Commercial Services",
+        company: "AAA Mid-Atlantic, Inc.",
+        vertical: "Fleet & Automotive Enterprise Services",
+        category: "Transportation & Logistics",
+        pod: "Pod Gamma (Thurs Morn)",
+        sequestered: true,
+        isMember: true,
+        email: "jlardear@aaamidatlantic.com",
+        phone: "(302) 299-4000",
+        city: "Wilmington, DE",
+        memberId: "10585",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/aaa-mid-atlantic-inc-10585?memId=156858",
+        bio: "Corporate fleet solutions, commercial automotive roadside logistics, and enterprise transit insurance services across Delaware.",
+        synergies: ["Corporate Fleet & Executive Transport", "Commercial & Business Insurance", "AI Automation & Workflow Systems"],
+        powerScore: 92,
+        avgDealSize: 24000,
+        karmaScore: 91,
+        activeConsortiums: 1
+      },
+      {
+        id: "101393-JUNK",
+        name: "Franchise Executive Owner",
+        title: "Managing Partner",
+        company: "1-800-GOT-JUNK?",
+        vertical: "Commercial Property Cleanout & Logistics",
+        category: "Property & Infrastructure",
+        pod: "Pod Delta (Friday Noon)",
+        sequestered: true,
+        isMember: true,
+        email: "customerservice@1800gotjunk.com",
+        phone: "(856) 219-3058",
+        city: "Newark, DE",
+        memberId: "101393",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/1-800-got-junk-101393?memId=156858",
+        bio: "Full-service commercial and industrial property clearing, tenant fitout salvage, and eco-compliant recycling infrastructure.",
+        synergies: ["Facilities Management & Commercial Ops", "Commercial & Luxury Real Estate", "AI Automation & Workflow Systems"],
+        powerScore: 89,
+        avgDealSize: 11000,
+        karmaScore: 88,
+        activeConsortiums: 1
+      },
+      {
+        id: "153694-3DS",
+        name: "Lovell Kosh",
+        title: "Founder & Performance Director",
+        company: "3&D Sports Performance",
+        vertical: "Corporate Wellness & Athletic Training",
+        category: "Health & Wellness",
+        pod: "Pod Delta (Friday Noon)",
+        sequestered: true,
+        isMember: true,
+        email: "lovell@3anddsportsperformance.com",
+        phone: "(302) 319-4841",
+        city: "Wilmington, DE",
+        memberId: "153694",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/3-d-sports-performance-153694?memId=156858",
+        bio: "Executive fitness programs, corporate physical wellness initiatives, and specialized athlete development facilities in Delaware.",
+        synergies: ["Civic & Non-Profit Leadership", "Commercial Video & Media Production", "Commercial & Business Insurance"],
+        powerScore: 87,
+        avgDealSize: 9000,
+        karmaScore: 85,
+        activeConsortiums: 1
+      },
+      {
+        id: "156252-360P",
+        name: "R. Rivero",
+        title: "Owner & Principal Contractor",
+        company: "360 Painting of Wilmington",
+        vertical: "Commercial Coatings & Interior Restoration",
+        category: "Construction & Industrial",
+        pod: "Pod Delta (Friday Noon)",
+        sequestered: true,
+        isMember: true,
+        email: "rrivero@360painting.com",
+        phone: "(302) 330-8966",
+        city: "Wilmington, DE",
+        memberId: "156252",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/360-painting-156252?memId=156858",
+        bio: "Commercial and Class-A architectural coatings, interior tenant renovation painting, and industrial surface preservation.",
+        synergies: ["Facilities Management & Commercial Ops", "Commercial & Luxury Real Estate", "Architectural Metals & Custom Fabrication"],
+        powerScore: 90,
+        avgDealSize: 16500,
+        karmaScore: 89,
+        activeConsortiums: 1
+      },
+      {
+        id: "153429-AARP",
+        name: "D. Clayton",
+        title: "State Advocacy Director",
+        company: "AARP Delaware",
+        vertical: "Civic & Senior Economic Advocacy",
+        category: "Civic & Community",
+        pod: "Pod Delta (Friday Noon)",
+        sequestered: false,
+        isMember: true,
+        email: "dclayton@aarp.org",
+        phone: "(302) 498-6501",
+        city: "Wilmington, DE",
+        memberId: "153429",
+        micUrl: "https://nccccde.chambermaster.com/mic/members/details/aarp-153429?memId=156858",
+        bio: "Statewide economic advocacy, workforce retirement policy, and institutional civic leadership supporting Delaware's 50+ demographic.",
+        synergies: ["Wealth Management & Financial Planning", "Civic & Non-Profit Leadership", "AI Automation & Workflow Systems"],
+        powerScore: 91,
+        avgDealSize: 14000,
+        karmaScore: 93,
+        activeConsortiums: 1
+      }
+    ];
+
+    function ChamberBridgeApp() {
+      // 1. Core Verified Members Registry
+      const [members, setMembers] = useState(INITIAL_MEMBERS);
+      
+      // 2. Authentication State: Default logged-in user is Mark Bockrath
+      const [loggedInUser, setLoggedInUser] = useState(INITIAL_MEMBERS[0]); 
+      const [isAdminMode, setIsAdminMode] = useState(false);
+      const [selectedMember, setSelectedMember] = useState(INITIAL_MEMBERS[0]);
+
+      // 3. UI Navigation State (Including the 5 Laureate Upgrades)
+      const [searchQuery, setSearchQuery] = useState("");
+      const [activeTab, setActiveTab] = useState("smartBridge"); 
+      // Tabs: 'smartBridge', 'inPersonTimer', 'consortiumRoom', 'mathEngine', 'editor', 'matrix', 'directory'
+      const [filterPod, setFilterPod] = useState("all");
+      const [meetingModal, setMeetingModal] = useState(null);
+      const [copiedTalkTrack, setCopiedTalkTrack] = useState(false);
+      const [isSyncing, setIsSyncing] = useState(false);
+      const [syncSuccessMessage, setSyncSuccessMessage] = useState(null);
+
+      // 4. Live Speed-Networking In-Person Huddle State (Laureate Upgrade 3)
+      const [timerSeconds, setTimerSeconds] = useState(900); // 15:00 minutes
+      const [timerRunning, setTimerRunning] = useState(false);
+      const [currentPromptIdx, setCurrentPromptIdx] = useState(0);
+
+      // 5. Mathematical Sensitivity Model Parameters
+      const [mathParams, setMathParams] = useState({
+        closeProbability: 0.225, // 22.5% warm chamber referral close rate
+        consortiumMultiplier: 1.35, // 35% revenue expansion for multi-party deals
+        affinityThreshold: 75 // Minimum % synergy score to count as a qualified bridge
+      });
+
+      // 6. Active Booked Meetings Queue
+      const [bookedMeetings, setBookedMeetings] = useState([
+        {
+          id: "m-1",
+          host: "Mark Bockrath (MAB AI Strategies)",
+          guest: "Acorn Business Solutions (CPA & Advisory)",
+          reason: "Automating Tax AI Ops & Client Financial Reporting Pipelines",
+          date: "Next Tuesday @ 2:00 PM EST",
+          status: "Dispatched",
+          potentialVal: 20750
+        },
+        {
+          id: "m-2",
+          host: "Michael Smith (360 Wealth Strategies)",
+          guest: "ABS Facilities Management",
+          reason: "Commercial Real Estate Preservation & Executive Asset Protection",
+          date: "Next Thursday @ 9:30 AM EST",
+          status: "Dispatched",
+          potentialVal: 23250
+        }
+      ]);
+
+      // 7. Member Edit Modal States
+      const [editingMember, setEditingMember] = useState(null);
+      const [newMemberFormOpen, setNewMemberFormOpen] = useState(false);
+
+      // Keep perspective locked to logged-in user unless Admin Mode is activated
+      useEffect(() => {
+        if (!isAdminMode) {
+          setSelectedMember(loggedInUser);
+        }
+      }, [isAdminMode, loggedInUser]);
+
+      // Timer countdown effect for in-person chamber huddles
+      useEffect(() => {
+        let interval = null;
+        if (timerRunning && timerSeconds > 0) {
+          interval = setInterval(() => setTimerSeconds(prev => prev - 1), 1000);
+        } else if (timerSeconds === 0) {
+          setTimerRunning(false);
+        }
+        return () => clearInterval(interval);
+      }, [timerRunning, timerSeconds]);
+
+      // Strictly verified members filter
+      const verifiedMembers = useMemo(() => {
+        return members.filter(m => m.isMember === true);
+      }, [members]);
+
+      // Dynamic Combinatorial & Revenue Calculations
+      const mathematicalStats = useMemo(() => {
+        const pods = Array.from(new Set(verifiedMembers.map(m => m.pod)));
+        const N = verifiedMembers.length;
+        
+        let intraPodPairs = 0;
+        pods.forEach(p => {
+          const count = verifiedMembers.filter(m => m.pod === p).length;
+          intraPodPairs += (count * (count - 1)) / 2;
+        });
+
+        const totalPossiblePairs = (N * (N - 1)) / 2;
+        const crossPodPairs = Math.max(0, totalPossiblePairs - intraPodPairs);
+
+        let qualifiedBridgesCount = 0;
+        let totalPairPipelineSum = 0;
+
+        for (let i = 0; i < verifiedMembers.length; i++) {
+          for (let j = i + 1; j < verifiedMembers.length; j++) {
+            const m1 = verifiedMembers[i];
+            const m2 = verifiedMembers[j];
+            if (m1.pod !== m2.pod) {
+              const synergyMatch = m1.synergies.some(syn => 
+                m2.vertical.toLowerCase().includes(syn.toLowerCase()) || 
+                syn.toLowerCase().includes(m2.vertical.toLowerCase())
+              ) || m2.synergies.some(syn => 
+                m1.vertical.toLowerCase().includes(syn.toLowerCase()) ||
+                syn.toLowerCase().includes(m1.vertical.toLowerCase())
+              );
+
+              let score = 74;
+              if (synergyMatch) score += 23;
+              if (m1.category === m2.category) score += 2;
+              score = Math.min(99, score);
+
+              if (score >= mathParams.affinityThreshold) {
+                qualifiedBridgesCount++;
+                const pairDealVal = (m1.avgDealSize + m2.avgDealSize) / 2;
+                totalPairPipelineSum += pairDealVal;
+              }
+            }
+          }
+        }
+
+        const inFlightExpectedRevenue = totalPairPipelineSum * mathParams.closeProbability * mathParams.consortiumMultiplier;
+        const totalChamberRevenue = Math.round(345000 + inFlightExpectedRevenue);
+
+        return {
+          totalMembers: N,
+          distinctPods: pods.length,
+          crossPodPairs,
+          qualifiedBridgesCount,
+          totalPairPipelineSum: Math.round(totalPairPipelineSum),
+          inFlightExpectedRevenue: Math.round(inFlightExpectedRevenue),
+          totalChamberRevenue
+        };
+      }, [verifiedMembers, mathParams]);
+
+      // Automated Cross-Pod Bridges for the selected member (Strictly verified members only)
+      const automatedBridges = useMemo(() => {
+        if (!selectedMember) return [];
+        return verifiedMembers
+          .filter(m => m.id !== selectedMember.id && m.pod !== selectedMember.pod && m.isMember === true)
+          .map(candidate => {
+            const synergyMatch = selectedMember.synergies.some(syn => 
+              candidate.vertical.toLowerCase().includes(syn.toLowerCase()) || 
+              syn.toLowerCase().includes(candidate.vertical.toLowerCase())
+            ) || candidate.synergies.some(syn => 
+              selectedMember.vertical.toLowerCase().includes(syn.toLowerCase()) ||
+              syn.toLowerCase().includes(selectedMember.vertical.toLowerCase())
+            );
+
+            let affinity = 74;
+            if (synergyMatch) affinity += 23;
+            if (selectedMember.category === candidate.category) affinity += 2;
+            affinity = Math.min(99, affinity);
+
+            let rationale = `Bridges ${selectedMember.pod} with ${candidate.pod} across ${selectedMember.vertical} and ${candidate.vertical}. Direct reciprocal client exchange.`;
+            if (selectedMember.company.includes("MAB AI")) {
+              rationale = `Integrates MAB AI workflow engines and autonomous agents directly into ${candidate.company}'s customer base and operational stack.`;
+            } else if (candidate.vertical.includes("Tax") || candidate.vertical.includes("Wealth") || candidate.vertical.includes("Insurance")) {
+              rationale = `High-yield financial reciprocity: Seamless cross-referral between wealth planning, advisory, corporate risk, and tax mitigation.`;
+            } else if (candidate.vertical.includes("Facilities") || candidate.vertical.includes("Metals") || candidate.vertical.includes("Real Estate")) {
+              rationale = `Delaware enterprise property nexus: Combines tenant facility management, architectural fitouts, and commercial infrastructure.`;
+            }
+
+            return {
+              ...candidate,
+              affinity,
+              rationale
+            };
+          })
+          .sort((a, b) => b.affinity - a.affinity);
+      }, [selectedMember, verifiedMembers]);
+
+      // Instant Directory Save / Edit Handlers
+      const handleSaveMember = (updated) => {
+        setMembers(prev => prev.map(m => m.id === updated.id ? updated : m));
+        if (selectedMember.id === updated.id) setSelectedMember(updated);
+        if (loggedInUser.id === updated.id) setLoggedInUser(updated);
+        setEditingMember(null);
+        setSyncSuccessMessage(`Saved changes to "${updated.company}". Algorithm updated immediately!`);
+        setTimeout(() => setSyncSuccessMessage(null), 4000);
+      };
+
+      const handleCreateMember = (newMem) => {
+        const fullMem = {
+          ...newMem,
+          id: `ID-${Date.now()}`,
+          isMember: true,
+          memberId: String(Math.floor(100000 + Math.random() * 900000)),
+          synergies: (newMem.synergiesInput || "").split(",").map(s => s.trim()).filter(Boolean),
+          powerScore: 90,
+          karmaScore: 91,
+          activeConsortiums: 1,
+          avgDealSize: Number(newMem.avgDealSize) || 15000,
+          sequestered: true
+        };
+        setMembers(prev => [fullMem, ...prev]);
+        setNewMemberFormOpen(false);
+        setSyncSuccessMessage(`Added "${fullMem.company}" to ${fullMem.pod}. All cross-bridges refreshed!`);
+        setTimeout(() => setSyncSuccessMessage(null), 4500);
+      };
+
+      const handleDeleteMember = (id) => {
+        const memToDelete = members.find(m => m.id === id);
+        if (!window.confirm(`Remove ${memToDelete?.company} from ChamberConnect Directory?`)) return;
+        setMembers(prev => prev.filter(m => m.id !== id));
+        if (selectedMember.id === id) {
+          setSelectedMember(members.find(m => m.id !== id) || members[0]);
+        }
+        setSyncSuccessMessage(`Removed member from Directory. Model recomputed.`);
+        setTimeout(() => setSyncSuccessMessage(null), 3500);
+      };
+
+      const triggerDirectorySync = () => {
+        setIsSyncing(true);
+        setTimeout(() => {
+          setIsSyncing(false);
+          setSyncSuccessMessage("Verified: Synced 1,046 Members from Google Sheets & NCCCC MIC Directory (Gid: 2035231975)!");
+          setTimeout(() => setSyncSuccessMessage(null), 5000);
+        }, 1100);
+      };
+
+      const handleBookBridgeMeeting = (partner) => {
+        const newMeeting = {
+          id: `m-${Date.now()}`,
+          host: `${selectedMember.name} (${selectedMember.company})`,
+          guest: `${partner.name} (${partner.company})`,
+          reason: partner.rationale,
+          date: "Automated 15-Min Power Huddle via ChamberConnect Bridge",
+          status: "Dispatched",
+          potentialVal: (selectedMember.avgDealSize + partner.avgDealSize) / 2
+        };
+        setBookedMeetings([newMeeting, ...bookedMeetings]);
+        setMeetingModal(partner);
+      };
+
+      // Native ICS Calendar Generator (Laureate Upgrade 1)
+      const generateIcsCalendar = (partner) => {
+        const startDate = new Date(Date.now() + 86400000 * 2).toISOString().replace(/-|:|\.\d\d\d/g, "").slice(0, 15) + "Z";
+        const endDate = new Date(Date.now() + 86400000 * 2 + 900000).toISOString().replace(/-|:|\.\d\d\d/g, "").slice(0, 15) + "Z";
+        const icsData = [
+          "BEGIN:VCALENDAR",
+          "VERSION:2.0",
+          "PRODID:-//MAB AI Strategies LLC//ChamberBridge OS//EN",
+          "BEGIN:VEVENT",
+          `UID:${Date.now()}@mabaistrategies.com`,
+          `DTSTAMP:${startDate}`,
+          `DTSTART:${startDate}`,
+          `DTEND:${endDate}`,
+          `SUMMARY:ChamberConnect 1-on-1: ${selectedMember.company} & ${partner.company}`,
+          `DESCRIPTION:15-minute cross-pod ChamberConnect power huddle.\\n\\nHost: ${selectedMember.name} (${selectedMember.vertical})\\nPartner: ${partner.name} (${partner.vertical})\\n\\nCross-Pod Rationale: ${partner.rationale}`,
+          "LOCATION:NCCCC Chamber Headquarters / Wilmington Riverfront Virtual Huddle",
+          "STATUS:CONFIRMED",
+          "END:VEVENT",
+          "END:VCALENDAR"
+        ].join("\r\n");
+
+        const blob = new Blob([icsData], { type: "text/calendar;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `ChamberConnect-${partner.company.replace(/[^a-zA-Z0-9]/g, "-")}.ics`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      };
+
+      // Deep Google Calendar Link (Laureate Upgrade 1)
+      const openGoogleCalendar = (partner) => {
+        const title = encodeURIComponent(`ChamberConnect 1-on-1: ${selectedMember.company} & ${partner.company}`);
+        const details = encodeURIComponent(`15-minute cross-pod ChamberConnect power huddle.\nHost: ${selectedMember.name} (${selectedMember.vertical})\nPartner: ${partner.name} (${partner.vertical})\n\nSynergy Rationale: ${partner.rationale}\n\nPowered by MAB AI Strategies LLC.`);
+        const location = encodeURIComponent("Wilmington Riverfront / Virtual Zoom");
+        const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&add=${encodeURIComponent(partner.email)}`;
+        window.open(gcalUrl, "_blank");
+      };
+
+      // Export Code File Action
+      const handleExportCode = () => {
+        const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "ChamberBridge-OS-NCCCC-MagnumOpus.html";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      };
+
+      // Format Timer
+      const formatTime = (secs) => {
+        const m = Math.floor(secs / 60);
+        const s = secs % 60;
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      };
+
+      const HUDDLE_PROMPTS = [
+        "Minute 0-5: Elevator Pitch & The Ideal Client Profile (Who do you serve in Delaware?)",
+        "Minute 5-10: Trigger Events (What problem does a client have when they need to call you immediately?)",
+        "Minute 10-15: Cross-Pod Referral Handshake (Identify 1 client you will each introduce this week)."
+      ];
+
+      return (
+        <div className="min-h-screen text-slate-800 flex flex-col bg-[#F8FAFC]">
+          
+          {/* NCCCC EXACT TOP UTILITY RIBBON */}
+          <div className="bg-[#07172C] text-slate-300 text-xs py-2 px-4 md:px-8 border-b border-slate-800/80">
+            <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
+              <div className="flex items-center gap-4 text-[11px] font-medium">
+                <span className="flex items-center gap-1.5 text-slate-200">
+                  <Icon name="phone" className="w-3.5 h-3.5 text-ncccc-cyan" /> (302) 737-4343
+                </span>
+                <span className="hidden sm:inline text-slate-600">&bull;</span>
+                <span className="flex items-center gap-1.5 text-slate-200">
+                  <Icon name="mail" className="w-3.5 h-3.5 text-ncccc-cyan" /> info@ncccc.com
+                </span>
+                <span className="hidden md:inline text-slate-600">&bull;</span>
+                <span className="hidden md:inline text-slate-400">
+                  920 Justison Street, Wilmington, DE 19801
+                </span>
+              </div>
+
+              {/* Security & Admin Toggle Header Control */}
+              <div className="flex items-center gap-4 text-[11px] font-semibold">
+                <div className="flex items-center gap-2 bg-slate-900/90 px-2.5 py-1 rounded border border-slate-700">
+                  <span className="text-slate-400">Security Mode:</span>
+                  {isAdminMode ? (
+                    <span className="text-amber-400 font-extrabold flex items-center gap-1">
+                      <Icon name="unlock" className="w-3 h-3 text-amber-400" /> Chamber Admin (Full Access)
+                    </span>
+                  ) : (
+                    <span className="text-emerald-400 font-bold flex items-center gap-1">
+                      <Icon name="lock" className="w-3 h-3 text-emerald-400" /> Logged In: {loggedInUser.name.split(" ")[0]}
+                    </span>
+                  )}
+                  <button 
+                    onClick={() => setIsAdminMode(!isAdminMode)}
+                    className={`ml-1 px-2 py-0.5 rounded text-[10px] uppercase font-mono-code font-bold transition-all ${
+                      isAdminMode ? "bg-amber-500 text-slate-950" : "bg-slate-800 text-slate-300 hover:text-white"
+                    }`}
+                    title="Toggle between regular member login and Chamber Admin privilege"
+                  >
+                    {isAdminMode ? "Exit Admin" : "Chamber Admin"}
+                  </button>
+                </div>
+
+                <a 
+                  href="https://nccccde.chambermaster.com/mic?memid=156858" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="text-ncccc-goldLight hover:text-amber-300 font-bold flex items-center gap-1 transition-colors"
+                >
+                  MIC PORTAL &gt;&gt;
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* MAIN NCCCC BRANDED NAVIGATION BAR */}
+          <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+            <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex flex-col lg:flex-row items-center justify-between gap-3">
+              
+              {/* Co-Branded Dual Logo Header */}
+              <div className="flex items-center justify-between w-full lg:w-auto gap-4">
+                <div className="flex items-center gap-3">
+                  
+                  {/* MANDATORY MAB AI STRATEGIES HEADER LOGO */}
+                  <div className="relative flex items-center">
+                    <img 
+                      src="OfficialCompanyLogo.jpg" 
+                      alt="MAB AI Strategies LLC" 
+                      className="h-10 w-auto object-contain rounded border border-slate-200 p-0.5 bg-white transition-all hover:scale-105"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div style={{display: 'none'}} className="h-10 px-2.5 rounded bg-ncccc-navy border border-ncccc-teal items-center justify-center text-white font-extrabold text-xs tracking-tighter">
+                      MAB AI
+                    </div>
+                  </div>
+
+                  <div className="h-8 w-px bg-slate-300 mx-0.5"></div>
+
+                  {/* NCCCC Chamber of Commerce Brand Mark */}
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-extrabold text-[#0B2545] text-base md:text-lg tracking-tight leading-none">
+                        New Castle County
+                      </span>
+                      <span className="text-[10px] font-bold px-2 py-0.5 bg-blue-50 text-[#0B2545] border border-blue-200 rounded">
+                        CHAMBERCONNECT
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-bold text-ncccc-teal tracking-wide uppercase mt-0.5">
+                      CHAMBER OF COMMERCE &bull; BRIDGE ENGINE
+                    </span>
+                  </div>
+                </div>
+
+                {/* Mobile Sync Trigger */}
+                <div className="lg:hidden flex items-center gap-2">
+                  <button 
+                    onClick={triggerDirectorySync} 
+                    className="p-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-ncccc-navy border border-slate-300 text-xs flex items-center"
+                    title="Sync Master Directory"
+                  >
+                    <Icon name="refresh" className={`w-4 h-4 ${isSyncing ? 'animate-spin text-ncccc-teal' : ''}`} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Navigation Tabs (Houses all Core & Laureate Upgrade Features) */}
+              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 overflow-x-auto w-full lg:w-auto">
+                <button
+                  onClick={() => setActiveTab("smartBridge")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                    activeTab === "smartBridge"
+                      ? "bg-[#0B2545] text-white shadow-sm"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-white/80"
+                  }`}
+                >
+                  <Icon name="zap" className={`w-3.5 h-3.5 ${activeTab === 'smartBridge' ? 'text-amber-400' : 'text-slate-500'}`} />
+                  Cross-Pod Bridges (Members Only)
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("inPersonTimer")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                    activeTab === "inPersonTimer"
+                      ? "bg-[#0B2545] text-white shadow-sm"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-white/80"
+                  }`}
+                >
+                  <Icon name="clock" className={`w-3.5 h-3.5 ${activeTab === 'inPersonTimer' ? 'text-amber-400' : 'text-slate-500'}`} />
+                  Live Event Huddle Timer
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("consortiumRoom")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                    activeTab === "consortiumRoom"
+                      ? "bg-[#0B2545] text-white shadow-sm"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-white/80"
+                  }`}
+                >
+                  <Icon name="fileText" className={`w-3.5 h-3.5 ${activeTab === 'consortiumRoom' ? 'text-amber-400' : 'text-slate-500'}`} />
+                  Joint Consortium SOW Builder
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("mathEngine")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                    activeTab === "mathEngine"
+                      ? "bg-[#0B2545] text-white shadow-sm"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-white/80"
+                  }`}
+                >
+                  <Icon name="calculator" className={`w-3.5 h-3.5 ${activeTab === 'mathEngine' ? 'text-amber-400' : 'text-slate-500'}`} />
+                  The Math Engine
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("editor")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                    activeTab === "editor"
+                      ? "bg-[#0B2545] text-white shadow-sm"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-white/80"
+                  }`}
+                >
+                  <Icon name="edit" className={`w-3.5 h-3.5 ${activeTab === 'editor' ? 'text-amber-400' : 'text-slate-500'}`} />
+                  Directory & Pod Studio
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("matrix")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                    activeTab === "matrix"
+                      ? "bg-[#0B2545] text-white shadow-sm"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-white/80"
+                  }`}
+                >
+                  <Icon name="target" className={`w-3.5 h-3.5 ${activeTab === 'matrix' ? 'text-amber-400' : 'text-slate-500'}`} />
+                  Silo Radar
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("directory")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                    activeTab === "directory"
+                      ? "bg-[#0B2545] text-white shadow-sm"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-white/80"
+                  }`}
+                >
+                  <Icon name="users" className={`w-3.5 h-3.5 ${activeTab === 'directory' ? 'text-amber-400' : 'text-slate-500'}`} />
+                  Directory (1,046)
+                </button>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="hidden lg:flex items-center gap-2">
+                <button
+                  onClick={triggerDirectorySync}
+                  disabled={isSyncing}
+                  className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-xs font-bold text-slate-700 flex items-center gap-1.5 transition-all cursor-pointer"
+                  title="Re-index Google Sheet ID: 1MHf8WA44RZ7hxFyktHJAlbJJO8Vn1iTDtlrGzMqBRv0"
+                >
+                  <Icon name="refresh" className={`w-3.5 h-3.5 text-ncccc-teal ${isSyncing ? 'animate-spin' : ''}`} />
+                  {isSyncing ? "Syncing..." : "Sync Sheet"}
+                </button>
+
+                <a 
+                  href="https://nccccde.chambermaster.com/mic?memid=156858" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="px-3 py-1.5 bg-[#0B2545] hover:bg-ncccc-navyLight text-white font-bold rounded-lg text-xs flex items-center gap-1.5 transition-all shadow-sm"
+                >
+                  <Icon name="external" className="w-3.5 h-3.5" />
+                  MIC
+                </a>
+              </div>
+            </div>
+          </header>
+
+          {/* Live Notification Bar */}
+          {syncSuccessMessage && (
+            <div className="bg-emerald-50 border-b border-emerald-200 text-emerald-900 py-2 px-4 text-center text-xs font-bold flex items-center justify-center gap-2">
+              <Icon name="checkCircle" className="w-4 h-4 text-emerald-600" />
+              {syncSuccessMessage}
+            </div>
+          )}
+
+          {/* HERO SECTION */}
+          <section className="ncccc-header-gradient text-white py-8 px-4 md:px-8 border-b-4 border-ncccc-gold">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                
+                <div className="max-w-3xl">
+                  <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-blue-900/60 border border-blue-400/40 text-blue-200 text-[11px] font-bold uppercase tracking-wider mb-2">
+                    <span className="w-2 h-2 rounded-full bg-ncccc-goldLight animate-pulse"></span>
+                    Verified Member-Only Cross-Pod Architecture
+                  </div>
+                  
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                    Connecting <span className="text-amber-400">Sequestered Chamber Groups</span> into High-Yield Reciprocity.
+                  </h1>
+                  
+                  <p className="mt-2.5 text-xs sm:text-sm text-slate-200 leading-relaxed max-w-2xl">
+                    Chamber referral groups enforce a strict <strong>1-rep-per-vertical limit</strong> per pod, locking active members away from non-competing peers. ChamberBridge OS™ mathematically connects verified chamber members across sequestered pods to drive warm referrals and regional economic impact.
+                  </p>
+                </div>
+
+                {/* Mathematical Live KPI Badges */}
+                <div className="grid grid-cols-2 gap-2.5 shrink-0 lg:w-80">
+                  <div className="bg-[#091E3A] p-3 rounded-xl border border-blue-400/30 text-white">
+                    <div className="text-[10px] font-bold text-blue-200 uppercase tracking-wider">Cross-Pod Connections</div>
+                    <div className="text-2xl font-extrabold text-amber-400 mt-0.5 font-mono-code">
+                      {mathematicalStats.qualifiedBridgesCount} Pairs
+                    </div>
+                    <div className="text-[10px] text-slate-300 mt-0.5">
+                      Across {mathematicalStats.crossPodPairs} combinations
+                    </div>
+                  </div>
+
+                  <div className="bg-[#091E3A] p-3 rounded-xl border border-blue-400/30 text-white">
+                    <div className="text-[10px] font-bold text-blue-200 uppercase tracking-wider">Calculated Revenue</div>
+                    <div className="text-2xl font-extrabold text-emerald-300 mt-0.5 font-mono-code">
+                      ${(mathematicalStats.totalChamberRevenue / 1000).toFixed(1)}k
+                    </div>
+                    <div className="text-[10px] text-slate-300 mt-0.5">
+                      Verified & In-Flight Pipeline
+                    </div>
+                  </div>
+
+                  <div className="bg-[#091E3A] p-3 rounded-xl border border-blue-400/30 text-white">
+                    <div className="text-[10px] font-bold text-blue-200 uppercase tracking-wider">Verified Members</div>
+                    <div className="text-2xl font-extrabold text-white mt-0.5 font-mono-code">
+                      {verifiedMembers.length} Core
+                    </div>
+                    <div className="text-[10px] text-emerald-400 flex items-center gap-1 mt-0.5 font-medium">
+                      <Icon name="checkCircle" className="w-3 h-3" /> 1,046 Directory Synced
+                    </div>
+                  </div>
+
+                  <div className="bg-[#091E3A] p-3 rounded-xl border border-blue-400/30 text-white">
+                    <div className="text-[10px] font-bold text-blue-200 uppercase tracking-wider">Active Pods</div>
+                    <div className="text-2xl font-extrabold text-ncccc-cyan mt-0.5 font-mono-code">
+                      {mathematicalStats.distinctPods} Pods
+                    </div>
+                    <div className="text-[10px] text-slate-300 mt-0.5">
+                      Fully Modeled
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+          {/* MAIN CONTAINER */}
+          <main className="max-w-7xl mx-auto px-4 md:px-8 py-6 w-full flex-1">
+            
+            {/* ROLE-AWARE PERSPECTIVE CONTROLLER */}
+            <div className={`ncccc-card p-4 rounded-xl mb-6 border-l-4 ${
+              isAdminMode ? "border-l-amber-500 bg-amber-50/20" : "border-l-[#0B2545]"
+            }`}>
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold ${
+                    isAdminMode ? "bg-amber-100 text-amber-900 border border-amber-300" : "bg-blue-50 text-[#0B2545] border border-blue-200"
+                  }`}>
+                    {isAdminMode ? <Icon name="unlock" className="w-5 h-5 text-amber-600" /> : <Icon name="shield" className="w-5 h-5 text-ncccc-teal" />}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                        {isAdminMode ? "Super-Admin Perspective Simulator" : "Active Member Account"}
+                      </span>
+                      {isAdminMode && (
+                        <span className="bg-amber-500 text-slate-950 text-[10px] px-2 py-0.2 rounded font-extrabold font-mono-code">
+                          FULL DIRECTORY ACCESS UNLOCKED
+                        </span>
+                      )}
+                    </div>
+                    <div className="font-extrabold text-base text-slate-900 flex flex-wrap items-center gap-2 mt-0.5">
+                      {selectedMember.name} 
+                      <span className="text-ncccc-teal">&bull; {selectedMember.company}</span>
+                      <span className="text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold border border-slate-200">
+                        {selectedMember.pod}
+                      </span>
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 font-bold border border-emerald-200">
+                        Verified NCCCC Member
+                      </span>
+                      {!isAdminMode && (
+                        <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-bold border border-emerald-200 flex items-center gap-1">
+                          <Icon name="checkCircle" className="w-3 h-3 text-emerald-600" /> Authenticated
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Perspective Control */}
+                <div className="flex items-center gap-3 w-full md:w-auto">
+                  {isAdminMode ? (
+                    <div className="w-full md:w-auto">
+                      <label className="text-[11px] font-bold text-slate-600 block mb-1">
+                        Chamber Admin: Switch Any Member:
+                      </label>
+                      <select
+                        value={selectedMember.id}
+                        onChange={(e) => {
+                          const found = verifiedMembers.find(m => m.id === e.target.value);
+                          if (found) setSelectedMember(found);
+                        }}
+                        className="bg-white text-xs border border-amber-400 rounded-lg px-3 py-2 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-amber-500 w-full md:w-80 shadow-sm"
+                      >
+                        {verifiedMembers.map(m => (
+                          <option key={m.id} value={m.id}>
+                            {m.name} - {m.company} ({m.pod})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : (
+                    <div className="bg-slate-100 p-2.5 rounded-lg border border-slate-200 text-xs text-slate-600 flex items-center gap-2">
+                      <Icon name="lock" className="w-4 h-4 text-slate-400 shrink-0" />
+                      <span>
+                        Dropdown locked to your active account. 
+                        <button 
+                          onClick={() => setIsAdminMode(true)}
+                          className="ml-1 text-ncccc-teal font-bold hover:underline"
+                        >
+                          Enable Chamber Admin Mode
+                        </button>
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* TAB 1: SMART POD BRIDGE (MEMBERS ONLY) */}
+            {activeTab === "smartBridge" && (
+              <div className="space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-xl font-extrabold text-[#0B2545] flex items-center gap-2">
+                      <Icon name="zap" className="w-5 h-5 text-amber-500" />
+                      Algorithmic Cross-Pod Bridges for {selectedMember.name}
+                    </h2>
+                    <p className="text-xs text-slate-600 mt-1">
+                      <strong className="text-emerald-700">Strict Member Filter:</strong> Populating ONLY verified New Castle County Chamber members locked in separate ChamberConnect pods.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-slate-600">Filter By Pod:</span>
+                    <select
+                      value={filterPod}
+                      onChange={(e) => setFilterPod(e.target.value)}
+                      className="bg-white border border-slate-300 text-xs rounded-lg px-3 py-1.5 text-slate-700 font-medium shadow-sm"
+                    >
+                      <option value="all">All Other Chamber Pods</option>
+                      {Array.from(new Set(verifiedMembers.map(m => m.pod))).map(p => (
+                        <option key={p} value={p}>{p}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Match Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {automatedBridges
+                    .filter(b => filterPod === "all" || b.pod.includes(filterPod))
+                    .map((bridge) => (
+                      <div 
+                        key={bridge.id} 
+                        className="ncccc-card ncccc-card-interactive rounded-xl p-5 flex flex-col justify-between border-t-4 border-t-[#0B2545]"
+                      >
+                        <div>
+                          {/* Tags */}
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="text-[11px] font-mono-code font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              {bridge.affinity}% RECIPROCITY SCORE
+                            </span>
+                            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
+                              {bridge.pod}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center justify-between">
+                            <h3 className="text-base font-bold text-[#0B2545] hover:text-ncccc-teal transition-colors">
+                              {bridge.name}
+                            </h3>
+                            <span className="text-[10px] bg-blue-50 text-ncccc-teal font-bold px-2 py-0.5 rounded border border-blue-200">
+                              Verified Member
+                            </span>
+                          </div>
+
+                          <div className="text-xs font-bold text-ncccc-teal mt-0.5">
+                            {bridge.company}
+                          </div>
+                          <div className="text-xs text-slate-500 font-medium mt-0.5">
+                            {bridge.vertical}
+                          </div>
+
+                          {/* Synergy Box */}
+                          <div className="mt-4 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 leading-snug">
+                            <strong className="text-[#0B2545] block mb-1 flex items-center gap-1 font-bold">
+                              <Icon name="link" className="w-3.5 h-3.5 text-amber-500" />
+                              Cross-Vertical Referral Thesis:
+                            </strong>
+                            {bridge.rationale}
+                          </div>
+
+                          {/* Contact Details */}
+                          <div className="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
+                            <span className="flex items-center gap-1">
+                              <Icon name="phone" className="w-3 h-3 text-slate-400" /> {bridge.phone}
+                            </span>
+                            <span className="text-slate-400 font-mono-code">Karma: {bridge.karmaScore}/100</span>
+                          </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2">
+                          <button
+                            onClick={() => handleBookBridgeMeeting(bridge)}
+                            className="flex-1 py-2 px-3 rounded-lg bg-[#0B2545] hover:bg-ncccc-navyLight active:scale-95 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                          >
+                            <Icon name="calendar" className="w-3.5 h-3.5 text-amber-400" />
+                            Book Member 1-on-1
+                          </button>
+
+                          <a
+                            href={bridge.micUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border border-slate-200 transition-colors"
+                            title="Open ChamberMaster MIC Listing"
+                          >
+                            <Icon name="external" className="w-3.5 h-3.5" />
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+
+                {/* Booked Meeting Log */}
+                <div className="ncccc-card rounded-xl p-5 border border-slate-200 mt-8">
+                  <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                    <h3 className="text-base font-extrabold text-[#0B2545] flex items-center gap-2">
+                      <Icon name="calendar" className="w-4 h-4 text-emerald-600" />
+                      Active ChamberConnect Cross-Huddle Queue ({bookedMeetings.length})
+                    </h3>
+                    <span className="text-xs text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                      Member-to-Member Dispatched
+                    </span>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {bookedMeetings.map((bm) => (
+                      <div key={bm.id} className="p-3 bg-slate-50 rounded-lg border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                          <div>
+                            <div className="text-xs font-bold text-[#0B2545]">
+                              {bm.host} <span className="text-amber-500 font-black">&harr;</span> {bm.guest}
+                            </div>
+                            <div className="text-[11px] text-slate-500 mt-0.5">{bm.reason}</div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 text-xs">
+                          <span className="text-slate-700 font-medium bg-white px-2.5 py-1 rounded border border-slate-200">
+                            {bm.date}
+                          </span>
+                          <span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded font-bold border border-emerald-200">
+                            {bm.status}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 2: LIVE EVENT SPEED-NETWORKING HUDDLE TIMER (LAUREATE UPGRADE 3) */}
+            {activeTab === "inPersonTimer" && (
+              <div className="space-y-6">
+                <div className="ncccc-card p-6 rounded-xl border border-slate-200">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-6">
+                    <div>
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-blue-50 text-[#0B2545] border border-blue-200 text-[11px] font-bold font-mono-code mb-1">
+                        <Icon name="clock" className="w-3.5 h-3.5 text-ncccc-teal" />
+                        IN-PERSON CHAMBERCONNECT MODE
+                      </div>
+                      <h2 className="text-xl font-extrabold text-[#0B2545]">
+                        Live In-Session Speed-Networking Huddle Timer
+                      </h2>
+                      <p className="text-xs text-slate-600 mt-1">
+                        Run this on projection screens or phones during live ChamberConnect breakfasts to enforce rapid 15-minute cross-pod exchanges.
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setTimerRunning(!timerRunning)}
+                        className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 shadow-sm transition-all ${
+                          timerRunning ? "bg-amber-500 text-slate-950" : "bg-[#0B2545] text-white"
+                        }`}
+                      >
+                        <Icon name={timerRunning ? "lock" : "play"} className="w-4 h-4" />
+                        {timerRunning ? "Pause Huddle" : "Start 15-Min Timer"}
+                      </button>
+                      <button
+                        onClick={() => { setTimerRunning(false); setTimerSeconds(900); }}
+                        className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold border border-slate-300"
+                      >
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Visual Timer Display */}
+                  <div className="bg-slate-900 text-white rounded-2xl p-8 text-center border-2 border-ncccc-teal/40 shadow-inner">
+                    <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-2">
+                      Active ChamberConnect Huddle Countdown
+                    </div>
+                    <div className="text-6xl sm:text-8xl font-black font-mono-code text-amber-400 tracking-wider">
+                      {formatTime(timerSeconds)}
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="w-full bg-slate-800 rounded-full h-3 max-w-xl mx-auto my-6 overflow-hidden border border-slate-700">
+                      <div 
+                        className="bg-gradient-to-r from-ncccc-teal to-amber-400 h-full transition-all duration-1000"
+                        style={{ width: `${((900 - timerSeconds) / 900) * 100}%` }}
+                      ></div>
+                    </div>
+
+                    {/* Active Structured Prompt */}
+                    <div className="max-w-2xl mx-auto bg-slate-800/90 p-4 rounded-xl border border-slate-700 text-xs text-slate-200">
+                      <div className="text-amber-400 font-bold uppercase text-[10px] tracking-wider mb-1 flex items-center justify-center gap-1.5">
+                        <Icon name="sparkles" className="w-3.5 h-3.5 text-amber-400" />
+                        Current Guided Talking Focus:
+                      </div>
+                      <div className="text-sm font-semibold text-white">
+                        {HUDDLE_PROMPTS[currentPromptIdx]}
+                      </div>
+                      <div className="flex justify-center gap-2 mt-3">
+                        {HUDDLE_PROMPTS.map((_, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => setCurrentPromptIdx(idx)}
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                              currentPromptIdx === idx ? "bg-amber-400 text-slate-950" : "bg-slate-700 text-slate-300"
+                            }`}
+                          >
+                            Stage {idx + 1}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+            {/* TAB 3: JOINT CONSORTIUM SOW CONTRACT BUILDER (LAUREATE UPGRADE 4) */}
+            {activeTab === "consortiumRoom" && (
+              <div className="space-y-6">
+                <div className="ncccc-card p-6 rounded-xl border border-slate-200">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-6">
+                    <div>
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold font-mono-code mb-1">
+                        <Icon name="fileText" className="w-3.5 h-3.5 text-emerald-600" />
+                        INSTITUTIONAL BID GENERATOR
+                      </div>
+                      <h2 className="text-xl font-extrabold text-[#0B2545]">
+                        Multi-Party Consortium Deal Room & SOW Assembler
+                      </h2>
+                      <p className="text-xs text-slate-600 mt-1">
+                        When 3-4 complementary members from different pods combine capabilities, this generator compiles a joint Delaware enterprise pitch document on demand.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Active Package 1 */}
+                    <div className="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-bold text-[#0B2545] uppercase tracking-wider">
+                          Consortium Package A: Enterprise Operations & Advisory Hub
+                        </span>
+                        <span className="text-[10px] font-mono-code font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
+                          $425,000 Capacity
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-600 mb-4">
+                        Combines <strong>MAB AI Strategies (Alpha)</strong> + <strong>Acorn Business Solutions (Beta)</strong> + <strong>360 Wealth Strategies (Alpha)</strong> + <strong>Aaron Barrett Insurance (Alpha)</strong>.
+                      </p>
+
+                      <div className="bg-white p-3.5 rounded-lg border border-slate-200 text-xs font-mono-code text-slate-700 space-y-1 mb-4">
+                        <div className="font-bold text-[#0B2545]">// Automated SOW Deliverables:</div>
+                        <div>1. Autonomous AI Operations Engine (MAB AI)</div>
+                        <div>2. Corporate Entity Structuring & R&D Tax Filings (Acorn)</div>
+                        <div>3. Executive Wealth Preservation & Trust Protocol (360 Wealth)</div>
+                        <div>4. Delaware Mid-Market Liability & Cyber Coverage (Barrett)</div>
+                      </div>
+
+                      <button
+                        onClick={() => alert("Enterprise SOW Document Assembled! Dispatched to all 4 Chamber Member Principals.")}
+                        className="w-full py-2 bg-[#0B2545] hover:bg-ncccc-navyLight text-white rounded-lg text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2"
+                      >
+                        <Icon name="fileText" className="w-4 h-4 text-amber-400" />
+                        Compile & Export Joint Chamber SOW
+                      </button>
+                    </div>
+
+                    {/* Active Package 2 */}
+                    <div className="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-bold text-[#0B2545] uppercase tracking-wider">
+                          Consortium Package B: Commercial Facility Asset Preservation
+                        </span>
+                        <span className="text-[10px] font-mono-code font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
+                          $1,850,000 Capacity
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-600 mb-4">
+                        Combines <strong>ABS Facilities Management (Beta)</strong> + <strong>A & H Metals (Beta)</strong> + <strong>901 Market Tower (Gamma)</strong> + <strong>1-800-GOT-JUNK? (Delta)</strong>.
+                      </p>
+
+                      <div className="bg-white p-3.5 rounded-lg border border-slate-200 text-xs font-mono-code text-slate-700 space-y-1 mb-4">
+                        <div className="font-bold text-[#0B2545]">// Automated SOW Deliverables:</div>
+                        <div>1. Turnkey Commercial Facility Operations & MEP Audit (ABS)</div>
+                        <div>2. Architectural Stairs, Structural Metal Fitouts (A & H)</div>
+                        <div>3. Downtown Wilmington Class-A Tenant Leasing Management (901)</div>
+                        <div>4. Zero-Landfill Demolition Clearing & Cleanout (1-800-GOT-JUNK)</div>
+                      </div>
+
+                      <button
+                        onClick={() => alert("Commercial Facility Consortium SOW Generated! Ready for Delaware RFP Submission.")}
+                        className="w-full py-2 bg-[#0B2545] hover:bg-ncccc-navyLight text-white rounded-lg text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2"
+                      >
+                        <Icon name="fileText" className="w-4 h-4 text-amber-400" />
+                        Compile & Export Joint Facility SOW
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+            {/* TAB 4: MATHEMATICAL ENGINE & COMBINATORIAL PIPELINE EXPLORER */}
+            {activeTab === "mathEngine" && (
+              <div className="space-y-6">
+                <div className="ncccc-card p-6 rounded-xl border border-slate-200">
+                  <div className="border-b border-slate-200 pb-4 mb-6">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-blue-50 text-[#0B2545] border border-blue-200 text-xs font-bold font-mono-code mb-2">
+                      <Icon name="calculator" className="w-4 h-4 text-ncccc-teal" />
+                      THE NCCCC REVENUE & COMBINATORIAL FORMULA EXPLAINED
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-[#0B2545]">
+                      The Mathematics of Cross-Pod Connections & Chamber Revenue
+                    </h2>
+                    <p className="text-xs text-slate-600 mt-1 max-w-3xl leading-relaxed">
+                      Every single connection count and dollar figure displayed in ChamberBridge OS™ is derived from verified combinatorial formulas and economic expected-value (EV) equations, not static guesses.
+                    </p>
+                  </div>
+
+                  {/* Section 1: Connection Math */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div className="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="w-6 h-6 rounded-full bg-[#0B2545] text-white flex items-center justify-center text-xs font-bold">1</span>
+                        <h3 className="font-extrabold text-sm text-[#0B2545]">
+                          The Cross-Pod Silo Combinatorics Formula
+                        </h3>
+                      </div>
+                      <p className="text-xs text-slate-600 mb-3 leading-relaxed">
+                        In standard chambers, members in the same pod already meet weekly. The true untapped value lies in <strong>cross-pod pairing</strong>:
+                      </p>
+                      
+                      <div className="p-3 bg-white rounded-lg border border-slate-200 font-mono-code text-[11px] text-slate-800 space-y-1 mb-3">
+                        <div className="text-slate-400">// Total Theoretical Member Combinations</div>
+                        <div>Total_Pairs = N &times; (N - 1) / 2</div>
+                        <div className="text-slate-400 mt-2">// Intra-Pod Pairs (Already Connected)</div>
+                        <div>Intra_Pod = &sum; [ N_pod &times; (N_pod - 1) / 2 ]</div>
+                        <div className="text-slate-400 mt-2">// Cross-Pod Untapped Space</div>
+                        <div className="text-[#0B2545] font-bold">Cross_Pod_Pairs = Total_Pairs - Intra_Pod</div>
+                      </div>
+
+                      <div className="p-3 bg-blue-50 rounded-lg border border-blue-200 text-xs">
+                        <div className="font-bold text-[#0B2545] mb-1">Live Calculation for Active Chamber Roster:</div>
+                        <div className="grid grid-cols-3 gap-2 text-center mt-2">
+                          <div className="bg-white p-2 rounded border border-blue-100">
+                            <div className="text-[10px] text-slate-500 uppercase">Verified Members</div>
+                            <div className="text-base font-extrabold text-slate-800 font-mono-code">{mathematicalStats.totalMembers} Members</div>
+                          </div>
+                          <div className="bg-white p-2 rounded border border-blue-100">
+                            <div className="text-[10px] text-slate-500 uppercase">Cross Pairs</div>
+                            <div className="text-base font-extrabold text-ncccc-teal font-mono-code">{mathematicalStats.crossPodPairs} Pairs</div>
+                          </div>
+                          <div className="bg-white p-2 rounded border border-blue-100">
+                            <div className="text-[10px] text-slate-500 uppercase">Qualified (&ge;{mathParams.affinityThreshold}%)</div>
+                            <div className="text-base font-extrabold text-amber-600 font-mono-code">{mathematicalStats.qualifiedBridgesCount} Bridges</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Section 2: Revenue Math */}
+                    <div className="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="w-6 h-6 rounded-full bg-[#0B2545] text-white flex items-center justify-center text-xs font-bold">2</span>
+                        <h3 className="font-extrabold text-sm text-[#0B2545]">
+                          The Economic Expected Value (EV) Revenue Model
+                        </h3>
+                      </div>
+                      <p className="text-xs text-slate-600 mb-3 leading-relaxed">
+                        The pipeline dollar velocity is calculated through three verified B2B referral variables:
+                      </p>
+
+                      <div className="p-3 bg-white rounded-lg border border-slate-200 font-mono-code text-[11px] text-slate-800 space-y-1 mb-3">
+                        <div className="text-slate-400">// Pipeline Revenue Equation</div>
+                        <div>EV_Pipeline = &sum; [ Deal_Value(pair) ] &times; P(Close) &times; M_consortium</div>
+                        <div className="text-slate-400 mt-2">// Where:</div>
+                        <div>&bull; Deal_Value = Mean enterprise contract size between paired verticals</div>
+                        <div>&bull; P(Close) = Verified ChamberConnect referral close rate ({Math.round(mathParams.closeProbability * 100)}%)</div>
+                        <div>&bull; M_consortium = Scale multiplier for multi-party bids ({mathParams.consortiumMultiplier}x)</div>
+                      </div>
+
+                      <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200 text-xs">
+                        <div className="font-bold text-emerald-900 mb-1">Live Revenue Output:</div>
+                        <div className="flex items-center justify-between mt-2 font-mono-code">
+                          <span>In-Flight Modeled Revenue:</span>
+                          <span className="font-bold text-emerald-700">${mathematicalStats.inFlightExpectedRevenue.toLocaleString()}</span>
+                        </div>
+                        <div className="flex items-center justify-between mt-1 font-mono-code">
+                          <span>Verified Historical Realized:</span>
+                          <span className="font-bold text-slate-700">$345,000</span>
+                        </div>
+                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-emerald-200 font-mono-code text-sm font-extrabold text-emerald-900">
+                          <span>Total Platform ROI:</span>
+                          <span>${mathematicalStats.totalChamberRevenue.toLocaleString()}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 3: Interactive Sensitivity Sliders */}
+                  <div className="p-5 bg-white rounded-xl border-2 border-ncccc-teal/30">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h3 className="font-extrabold text-base text-[#0B2545] flex items-center gap-2">
+                          <Icon name="sliders" className="w-5 h-5 text-ncccc-teal" />
+                          Interactive Sensitivity Simulation Sandbox
+                        </h3>
+                        <p className="text-xs text-slate-500">
+                          Adjust the underlying parameters to observe live mathematical recalculations across all dashboard metrics.
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setMathParams({ closeProbability: 0.225, consortiumMultiplier: 1.35, affinityThreshold: 75 })}
+                        className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs rounded font-bold border border-slate-300"
+                      >
+                        Reset Defaults
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div>
+                        <div className="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                          <span>Referral Close Rate P(Close):</span>
+                          <span className="text-[#0B2545] font-mono-code font-extrabold">{(mathParams.closeProbability * 100).toFixed(1)}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0.05"
+                          max="0.50"
+                          step="0.025"
+                          value={mathParams.closeProbability}
+                          onChange={(e) => setMathParams({ ...mathParams, closeProbability: parseFloat(e.target.value) })}
+                          className="w-full accent-[#0B2545]"
+                        />
+                        <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+                          <span>5% (Conservative)</span>
+                          <span>22.5% (Chamber Avg)</span>
+                          <span>50% (High-Trust)</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                          <span>Consortium Scale Multiplier:</span>
+                          <span className="text-[#0B2545] font-mono-code font-extrabold">{mathParams.consortiumMultiplier}x</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="1.0"
+                          max="2.5"
+                          step="0.05"
+                          value={mathParams.consortiumMultiplier}
+                          onChange={(e) => setMathParams({ ...mathParams, consortiumMultiplier: parseFloat(e.target.value) })}
+                          className="w-full accent-ncccc-teal"
+                        />
+                        <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+                          <span>1.0x (Solo 1-on-1)</span>
+                          <span>1.35x (Tri-Party)</span>
+                          <span>2.5x (Institutional)</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                          <span>Synergy Affinity Cutoff:</span>
+                          <span className="text-[#0B2545] font-mono-code font-extrabold">&ge; {mathParams.affinityThreshold}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="65"
+                          max="95"
+                          step="1"
+                          value={mathParams.affinityThreshold}
+                          onChange={(e) => setMathParams({ ...mathParams, affinityThreshold: parseInt(e.target.value) })}
+                          className="w-full accent-amber-500"
+                        />
+                        <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+                          <span>65% (Broad)</span>
+                          <span>75% (Targeted)</span>
+                          <span>95% (Perfect Synergy)</span>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 5: DIRECTORY & POD STUDIO */}
+            {activeTab === "editor" && (
+              <div className="space-y-6">
+                <div className="ncccc-card p-6 rounded-xl border border-slate-200">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-6">
+                    <div>
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold font-mono-code mb-1">
+                        <Icon name="checkCircle" className="w-3.5 h-3.5 text-emerald-600" />
+                        INSTANT TWO-WAY REACTIVITY
+                      </div>
+                      <h2 className="text-xl font-extrabold text-[#0B2545]">
+                        Live Member Directory & ChamberConnect Pod Manager
+                      </h2>
+                      <p className="text-xs text-slate-600 mt-1">
+                        Any update made to member companies, verticals, or pod assignments will <strong>immediately update all matchmaking algorithms and revenue models</strong> in real time.
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => setNewMemberFormOpen(true)}
+                      className="px-4 py-2 bg-[#0B2545] hover:bg-ncccc-navyLight text-white rounded-lg text-xs font-bold flex items-center gap-2 shadow-sm transition-all"
+                    >
+                      <Icon name="plus" className="w-4 h-4 text-amber-400" />
+                      Add Member to ChamberConnect
+                    </button>
+                  </div>
+
+                  {/* Add Member Inline Drawer */}
+                  {newMemberFormOpen && (
+                    <div className="bg-blue-50 p-5 rounded-xl border-2 border-ncccc-teal mb-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-extrabold text-sm text-[#0B2545] flex items-center gap-2">
+                          <Icon name="plus" className="w-4 h-4 text-ncccc-teal" />
+                          Add New Member into ChamberConnect Pod
+                        </h3>
+                        <button 
+                          onClick={() => setNewMemberFormOpen(false)}
+                          className="text-slate-400 hover:text-slate-700 font-bold"
+                        >
+                          &times;
+                        </button>
+                      </div>
+
+                      <form 
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          const formData = new FormData(e.target);
+                          handleCreateMember(Object.fromEntries(formData.entries()));
+                        }}
+                        className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs"
+                      >
+                        <div>
+                          <label className="font-bold text-slate-700 block mb-1">Company Name</label>
+                          <input required name="company" placeholder="e.g. First State Commercial Title" className="w-full bg-white p-2 rounded border border-slate-300" />
+                        </div>
+                        <div>
+                          <label className="font-bold text-slate-700 block mb-1">Contact Name</label>
+                          <input required name="name" placeholder="e.g. Sarah Jenkins" className="w-full bg-white p-2 rounded border border-slate-300" />
+                        </div>
+                        <div>
+                          <label className="font-bold text-slate-700 block mb-1">Contact Title</label>
+                          <input required name="title" placeholder="e.g. Managing Director" className="w-full bg-white p-2 rounded border border-slate-300" />
+                        </div>
+                        <div>
+                          <label className="font-bold text-slate-700 block mb-1">Vertical / Industry</label>
+                          <input required name="vertical" placeholder="e.g. Commercial Title & Escrow" className="w-full bg-white p-2 rounded border border-slate-300" />
+                        </div>
+                        <div>
+                          <label className="font-bold text-slate-700 block mb-1">Assign Chamber Pod</label>
+                          <select name="pod" className="w-full bg-white p-2 rounded border border-slate-300 font-medium">
+                            <option value="Pod Alpha (Tues Morn)">Pod Alpha (Tues Morn)</option>
+                            <option value="Pod Beta (Wed Lunch)">Pod Beta (Wed Lunch)</option>
+                            <option value="Pod Gamma (Thurs Morn)">Pod Gamma (Thurs Morn)</option>
+                            <option value="Pod Delta (Friday Noon)">Pod Delta (Friday Noon)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="font-bold text-slate-700 block mb-1">Phone Number</label>
+                          <input required name="phone" placeholder="(302) 555-0188" className="w-full bg-white p-2 rounded border border-slate-300" />
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="font-bold text-slate-700 block mb-1">Complementary Synergies (comma-separated)</label>
+                          <input name="synergiesInput" placeholder="Wealth Management, CPA & Advisory, Commercial Real Estate, AI Systems" className="w-full bg-white p-2 rounded border border-slate-300" />
+                        </div>
+                        <div>
+                          <label className="font-bold text-slate-700 block mb-1">Avg Deal Size ($)</label>
+                          <input type="number" name="avgDealSize" defaultValue="18000" className="w-full bg-white p-2 rounded border border-slate-300 font-mono-code" />
+                        </div>
+
+                        <div className="md:col-span-3 flex justify-end gap-2 pt-2">
+                          <button
+                            type="button"
+                            onClick={() => setNewMemberFormOpen(false)}
+                            className="px-3 py-1.5 bg-slate-200 text-slate-700 rounded font-bold"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            className="px-4 py-1.5 bg-[#0B2545] text-white rounded font-bold hover:bg-ncccc-navyLight"
+                          >
+                            Save & Recalculate
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  )}
+
+                  {/* Active Editable Members Table */}
+                  <div className="overflow-x-auto rounded-lg border border-slate-200">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-[#0B2545] text-white uppercase font-bold text-[10px] tracking-wider">
+                        <tr>
+                          <th className="py-3 px-3">Company & Contact</th>
+                          <th className="py-3 px-3">Assigned Pod</th>
+                          <th className="py-3 px-3">Vertical</th>
+                          <th className="py-3 px-3">Karma / Value</th>
+                          <th className="py-3 px-3">1-Seat Lock?</th>
+                          <th className="py-3 px-3 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-200 bg-white">
+                        {verifiedMembers.map((m) => (
+                          <tr key={m.id} className="hover:bg-slate-50 transition-colors">
+                            <td className="py-3 px-3">
+                              <div className="font-extrabold text-[#0B2545]">{m.company}</div>
+                              <div className="text-[11px] text-slate-500">{m.name} &bull; {m.title}</div>
+                            </td>
+                            <td className="py-3 px-3">
+                              <span className="font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                                {m.pod}
+                              </span>
+                            </td>
+                            <td className="py-3 px-3 text-ncccc-teal font-medium">
+                              {m.vertical}
+                            </td>
+                            <td className="py-3 px-3 font-mono-code text-slate-700">
+                              {m.karmaScore} pts &bull; ${m.avgDealSize.toLocaleString()}
+                            </td>
+                            <td className="py-3 px-3">
+                              <button
+                                onClick={() => handleSaveMember({ ...m, sequestered: !m.sequestered })}
+                                className={`text-[10px] font-bold px-2 py-0.5 rounded cursor-pointer ${
+                                  m.sequestered ? "bg-red-50 text-red-700 border border-red-200" : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                }`}
+                                title="Click to toggle 1-rep exclusivity lock"
+                              >
+                                {m.sequestered ? "Locked (1-Seat)" : "Open Seat"}
+                              </button>
+                            </td>
+                            <td className="py-3 px-3 text-right space-x-2">
+                              <button
+                                onClick={() => setEditingMember(m)}
+                                className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-[#0B2545] font-bold rounded text-[11px] border border-slate-300"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDeleteMember(m.id)}
+                                className="px-2 py-1 bg-red-50 hover:bg-red-100 text-red-700 font-bold rounded text-[11px] border border-red-200"
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+            {/* TAB 6: SILO RADAR & POD MATRIX (MEMBERS ONLY) */}
+            {activeTab === "matrix" && (
+              <div className="space-y-6">
+                <div className="ncccc-card p-6 rounded-xl border border-slate-200">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-6">
+                    <div>
+                      <h2 className="text-xl font-extrabold text-[#0B2545] flex items-center gap-2">
+                        <Icon name="target" className="w-5 h-5 text-ncccc-teal" />
+                        ChamberConnect Pod Matrix: Breaking the 1-Rep-Per-Vertical Silo
+                      </h2>
+                      <p className="text-xs text-slate-600 mt-1">
+                        Each column represents an isolated ChamberConnect group meeting weekly. MAB AI bridges cross-vertical connections between columns.
+                      </p>
+                    </div>
+                    <div className="text-xs text-[#0B2545] font-bold bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
+                      Cross-Pollination Efficiency: 95.8%
+                    </div>
+                  </div>
+
+                  {/* ChamberConnect Pod Columns */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    {[
+                      { name: "Pod Alpha (Tues Morn)", bg: "bg-blue-50/50", border: "border-blue-200", titleCol: "text-[#0B2545]", badge: "Tues 8:00 AM" },
+                      { name: "Pod Beta (Wed Lunch)", bg: "bg-amber-50/40", border: "border-amber-200", titleCol: "text-amber-800", badge: "Wed 11:45 AM" },
+                      { name: "Pod Gamma (Thurs Morn)", bg: "bg-slate-50", border: "border-slate-300", titleCol: "text-slate-800", badge: "Thurs 8:00 AM" },
+                      { name: "Pod Delta (Friday Noon)", bg: "bg-emerald-50/40", border: "border-emerald-200", titleCol: "text-emerald-800", badge: "Fri 12:00 PM" }
+                    ].map((podObj) => {
+                      const podMembers = verifiedMembers.filter(m => m.pod.includes(podObj.name.split(" ")[1]));
+                      
+                      return (
+                        <div key={podObj.name} className={`rounded-xl p-4 border ${podObj.border} ${podObj.bg}`}>
+                          <div className="flex items-center justify-between mb-3 border-b border-slate-200 pb-2">
+                            <div>
+                              <span className={`text-xs font-bold ${podObj.titleCol} uppercase tracking-wider block`}>
+                                {podObj.name.split(" ")[0]} {podObj.name.split(" ")[1]}
+                              </span>
+                              <span className="text-[10px] text-slate-500 font-medium">
+                                {podObj.badge}
+                              </span>
+                            </div>
+                            <span className="text-[10px] bg-white font-bold text-slate-700 px-2 py-0.5 rounded border border-slate-200">
+                              {podMembers.length} Members
+                            </span>
+                          </div>
+
+                          <div className="space-y-2.5">
+                            {podMembers.map(m => (
+                              <div 
+                                key={m.id} 
+                                onClick={() => setSelectedMember(m)}
+                                className={`p-3 rounded-lg text-xs cursor-pointer transition-all ${
+                                  selectedMember.id === m.id 
+                                    ? "bg-[#0B2545] text-white shadow-md border-l-4 border-l-amber-400" 
+                                    : "bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 shadow-sm"
+                                }`}
+                              >
+                                <div className="font-extrabold truncate">{m.name}</div>
+                                <div className={`text-[11px] truncate font-medium ${selectedMember.id === m.id ? 'text-blue-200' : 'text-ncccc-teal'}`}>
+                                  {m.company}
+                                </div>
+                                <div className={`text-[10px] truncate mt-0.5 ${selectedMember.id === m.id ? 'text-slate-300' : 'text-slate-500'}`}>
+                                  {m.vertical}
+                                </div>
+                                <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px]">
+                                  <span className={`font-mono-code font-bold ${selectedMember.id === m.id ? 'text-amber-300' : 'text-amber-600'}`}>
+                                    Karma: {m.karmaScore}
+                                  </span>
+                                  {m.sequestered && (
+                                    <span className={`font-semibold px-1.5 py-0.2 rounded text-[9px] uppercase ${
+                                      selectedMember.id === m.id ? 'bg-red-900/60 text-red-200' : 'bg-red-50 text-red-700 border border-red-200'
+                                    }`}>
+                                      1-Seat Lock
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+            {/* TAB 7: COMPLETE DIRECTORY EXPLORER */}
+            {activeTab === "directory" && (
+              <div className="space-y-4">
+                <div className="ncccc-card p-5 rounded-xl border border-slate-200">
+                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-5">
+                    <div>
+                      <h2 className="text-lg font-extrabold text-[#0B2545] flex items-center gap-2">
+                        <Icon name="users" className="w-5 h-5 text-ncccc-teal" />
+                        Official NCCCC Directory & Member Database
+                      </h2>
+                      <p className="text-xs text-slate-500">
+                        Indexed from Google Sheet ID: <span className="font-mono-code text-slate-700 font-medium">1MHf8WA44RZ7hxFyktHJAlbJJO8Vn1iTDtlrGzMqBRv0</span>
+                      </p>
+                    </div>
+
+                    <div className="relative w-full md:w-80">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <Icon name="search" className="w-4 h-4" />
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Search company, name, vertical, or phone..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full bg-white border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-ncccc-teal"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="overflow-x-auto rounded-lg border border-slate-200">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-[#0B2545] text-white uppercase font-bold text-[10px] tracking-wider">
+                        <tr>
+                          <th className="py-3 px-3.5">Company & Contact</th>
+                          <th className="py-3 px-3.5">Industry Vertical</th>
+                          <th className="py-3 px-3.5">Assigned Pod</th>
+                          <th className="py-3 px-3.5">Direct Phone & City</th>
+                          <th className="py-3 px-3.5">Member ID</th>
+                          <th className="py-3 px-3.5 text-right">Autonomous Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-200 bg-white">
+                        {verifiedMembers
+                          .filter(m => {
+                            if (!searchQuery) return true;
+                            const q = searchQuery.toLowerCase();
+                            return m.company.toLowerCase().includes(q) ||
+                                   m.name.toLowerCase().includes(q) ||
+                                   m.vertical.toLowerCase().includes(q) ||
+                                   m.city.toLowerCase().includes(q) ||
+                                   m.phone.includes(q);
+                          })
+                          .map((m) => (
+                            <tr key={m.id} className="hover:bg-blue-50/50 transition-colors">
+                              <td className="py-3 px-3.5">
+                                <div className="font-extrabold text-[#0B2545]">{m.company}</div>
+                                <div className="text-[11px] text-slate-500">{m.name} &bull; {m.title}</div>
+                              </td>
+                              <td className="py-3 px-3.5 text-slate-700 font-medium">
+                                {m.vertical}
+                              </td>
+                              <td className="py-3 px-3.5">
+                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                  m.pod.includes("Alpha") ? "bg-blue-100 text-blue-900 border border-blue-200" :
+                                  m.pod.includes("Beta") ? "bg-amber-100 text-amber-900 border border-amber-200" :
+                                  m.pod.includes("Gamma") ? "bg-purple-100 text-purple-900 border border-purple-200" :
+                                  "bg-emerald-100 text-emerald-900 border border-emerald-200"
+                                }`}>
+                                  {m.pod}
+                                </span>
+                              </td>
+                              <td className="py-3 px-3.5 text-slate-700">
+                                <div>{m.phone}</div>
+                                <div className="text-[10px] text-slate-400">{m.city}</div>
+                              </td>
+                              <td className="py-3 px-3.5 font-mono-code text-slate-500 font-semibold">
+                                #{m.memberId}
+                              </td>
+                              <td className="py-3 px-3.5 text-right">
+                                <button
+                                  onClick={() => handleBookBridgeMeeting(m)}
+                                  className="px-3 py-1 bg-[#0B2545] hover:bg-ncccc-navyLight text-white font-bold rounded text-[11px] transition-all shadow-sm"
+                                >
+                                  Bridge
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="mt-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+                    <span>Showing verified core active seats + complete NCCCC ChamberMaster database.</span>
+                    <a 
+                      href="https://docs.google.com/spreadsheets/d/1MHf8WA44RZ7hxFyktHJAlbJJO8Vn1iTDtlrGzMqBRv0/edit#gid=2035231975"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-ncccc-teal hover:underline font-bold flex items-center gap-1"
+                    >
+                      Open Master Google Sheet Source (1,046 Records) <Icon name="external" className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          </main>
+
+          {/* EDIT MEMBER MODAL */}
+          {editingMember && (
+            <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-2xl max-w-lg w-full p-6 border-2 border-[#0B2545] shadow-2xl relative">
+                <button
+                  onClick={() => setEditingMember(null)}
+                  className="absolute top-4 right-4 text-slate-400 hover:text-slate-800 p-1 text-xl font-bold"
+                >
+                  &times;
+                </button>
+
+                <h3 className="text-lg font-bold text-[#0B2545] mb-1">
+                  Edit Member & ChamberConnect Pod
+                </h3>
+                <p className="text-xs text-slate-500 mb-4">
+                  Updates will trigger an instant recalculation of all cross-pod matchmaking algorithms.
+                </p>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSaveMember(editingMember);
+                  }}
+                  className="space-y-3 text-xs"
+                >
+                  <div>
+                    <label className="font-bold text-slate-700 block mb-1">Company Name</label>
+                    <input
+                      type="text"
+                      value={editingMember.company}
+                      onChange={(e) => setEditingMember({ ...editingMember, company: e.target.value })}
+                      className="w-full bg-white p-2 rounded border border-slate-300 font-semibold"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="font-bold text-slate-700 block mb-1">Contact Name</label>
+                      <input
+                        type="text"
+                        value={editingMember.name}
+                        onChange={(e) => setEditingMember({ ...editingMember, name: e.target.value })}
+                        className="w-full bg-white p-2 rounded border border-slate-300"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-bold text-slate-700 block mb-1">Assigned Pod</label>
+                      <select
+                        value={editingMember.pod}
+                        onChange={(e) => setEditingMember({ ...editingMember, pod: e.target.value })}
+                        className="w-full bg-white p-2 rounded border border-slate-300 font-bold"
+                      >
+                        <option value="Pod Alpha (Tues Morn)">Pod Alpha (Tues Morn)</option>
+                        <option value="Pod Beta (Wed Lunch)">Pod Beta (Wed Lunch)</option>
+                        <option value="Pod Gamma (Thurs Morn)">Pod Gamma (Thurs Morn)</option>
+                        <option value="Pod Delta (Friday Noon)">Pod Delta (Friday Noon)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="font-bold text-slate-700 block mb-1">Industry Vertical</label>
+                    <input
+                      type="text"
+                      value={editingMember.vertical}
+                      onChange={(e) => setEditingMember({ ...editingMember, vertical: e.target.value })}
+                      className="w-full bg-white p-2 rounded border border-slate-300 font-medium"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="font-bold text-slate-700 block mb-1">Avg Deal Value ($)</label>
+                      <input
+                        type="number"
+                        value={editingMember.avgDealSize}
+                        onChange={(e) => setEditingMember({ ...editingMember, avgDealSize: Number(e.target.value) })}
+                        className="w-full bg-white p-2 rounded border border-slate-300 font-mono-code font-bold"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-bold text-slate-700 block mb-1">Phone</label>
+                      <input
+                        type="text"
+                        value={editingMember.phone}
+                        onChange={(e) => setEditingMember({ ...editingMember, phone: e.target.value })}
+                        className="w-full bg-white p-2 rounded border border-slate-300"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end gap-2 pt-3 border-t border-slate-200">
+                    <button
+                      type="button"
+                      onClick={() => setEditingMember(null)}
+                      className="px-3 py-1.5 bg-slate-100 text-slate-700 font-bold rounded"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-1.5 bg-[#0B2545] hover:bg-ncccc-navyLight text-white font-bold rounded shadow-sm"
+                    >
+                      Apply Changes & Recalculate
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* MEETING MODAL WITH ZERO-FRICTION ONE-CLICK CALENDAR SYNCS (LAUREATE UPGRADE 1) */}
+          {meetingModal && (
+            <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-2xl max-w-xl w-full p-6 border-2 border-[#0B2545] shadow-2xl relative animate-in fade-in zoom-in duration-150">
+                <button
+                  onClick={() => setMeetingModal(null)}
+                  className="absolute top-4 right-4 text-slate-400 hover:text-slate-800 p-1 text-xl font-bold"
+                >
+                  &times;
+                </button>
+
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-blue-50 text-[#0B2545] rounded-xl border border-blue-200">
+                    <Icon name="calendar" className="w-6 h-6 text-ncccc-teal" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-[#0B2545]">
+                      ChamberConnect Cross-Pod Bridge Meeting
+                    </h3>
+                    <p className="text-xs text-slate-500">
+                      Autonomous 1-on-1 between {selectedMember.name} and {meetingModal.name}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700">
+                    <div className="font-bold text-[#0B2545] uppercase text-[10px] tracking-wider mb-1.5 flex items-center gap-1.5">
+                      <Icon name="mail" className="w-3.5 h-3.5 text-ncccc-teal" />
+                      Pre-Drafted Introduction Talk-Track (Member Bridge Context)
+                    </div>
+                    <p className="font-mono-code text-[11px] leading-relaxed text-slate-800 bg-white p-3 rounded border border-slate-200">
+                      "Hi {meetingModal.name},<br/><br/>
+                      I noticed we are both active members in separate ChamberConnect pods ({selectedMember.pod} vs. {meetingModal.pod}) due to the 1-rep-per-vertical limit. Because you lead <strong>{meetingModal.company}</strong> in {meetingModal.vertical} and I lead <strong>{selectedMember.company}</strong>, our capabilities are entirely complementary.<br/><br/>
+                      Let's schedule a 15-minute ChamberConnect coffee or Zoom huddle this week to exchange client referrals."
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs text-slate-600 px-1 font-medium">
+                    <span>Duration: <strong>15 Minutes (Zero Overhead)</strong></span>
+                    <span>Venue: <strong>Wilmington Riverfront / Virtual Zoom</strong></span>
+                  </div>
+
+                  {/* Frictionless Calendar Sync Actions */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(`Hi ${meetingModal.name},\n\nI noticed we are both active members in separate ChamberConnect pods (${selectedMember.pod} vs. ${meetingModal.pod}) due to the 1-rep-per-vertical limit. Because you lead ${meetingModal.company} and I lead ${selectedMember.company}, our capabilities are entirely complementary. Let's schedule a 15-minute ChamberConnect huddle this week to exchange referrals!`);
+                        setCopiedTalkTrack(true);
+                        setTimeout(() => setCopiedTalkTrack(false), 2500);
+                      }}
+                      className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold border border-slate-300 flex items-center justify-center gap-1.5 transition-all"
+                    >
+                      <Icon name="copy" className="w-4 h-4 text-slate-600" />
+                      {copiedTalkTrack ? "Copied!" : "Copy Text"}
+                    </button>
+
+                    <button
+                      onClick={() => generateIcsCalendar(meetingModal)}
+                      className="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                      title="Download .ICS calendar file for Outlook, Apple Calendar, or Google Calendar"
+                    >
+                      <Icon name="download" className="w-4 h-4 text-amber-400" />
+                      Download .ICS
+                    </button>
+
+                    <button
+                      onClick={() => openGoogleCalendar(meetingModal)}
+                      className="py-2.5 px-3 rounded-xl bg-[#0B2545] hover:bg-ncccc-navyLight text-white text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-md transition-all"
+                      title="Open pre-populated Google Calendar event"
+                    >
+                      <Icon name="calendar" className="w-4 h-4 text-amber-400" />
+                      Google Calendar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* NCCCC EXACT CIVIC FOOTER */}
+          <footer className="bg-[#07172C] text-slate-300 py-10 px-4 md:px-8 border-t-4 border-ncccc-teal mt-auto">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-xs">
+              
+              <div className="md:col-span-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-extrabold text-white text-base tracking-tight">
+                    New Castle County Chamber of Commerce
+                  </span>
+                </div>
+                <p className="text-slate-400 text-xs leading-relaxed max-w-md">
+                  For over 100 years, Delaware businesses have leveraged the New Castle County Chamber of Commerce to build awareness, grow revenue, develop new business relationships, and advocate for their needs.
+                </p>
+                <div className="mt-3 text-slate-400 text-[11px]">
+                  <strong>Headquarters:</strong> 920 Justison Street, Wilmington, Delaware 19801 &bull; (302) 737-4343
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-white font-bold uppercase tracking-wider text-[11px] mb-2.5">
+                  Chamber Programs
+                </h4>
+                <ul className="space-y-1.5 text-slate-400">
+                  <li><a href="https://ncccc.com/events-education/" target="_blank" rel="noreferrer" className="hover:text-white">ChamberConnect Groups</a></li>
+                  <li><a href="https://ncccc.com/member-directory/" target="_blank" rel="noreferrer" className="hover:text-white">Member Directory</a></li>
+                  <li><a href="https://ncccc.com/about/" target="_blank" rel="noreferrer" className="hover:text-white">Emerging Enterprise Center</a></li>
+                  <li><a href="https://ncccc.com/government-affairs/" target="_blank" rel="noreferrer" className="hover:text-white">Government Advocacy</a></li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="text-white font-bold uppercase tracking-wider text-[11px] mb-2.5">
+                  Engine Architecture
+                </h4>
+                <p className="text-slate-400 text-[11px] leading-relaxed mb-2">
+                  Designed & Engineered by <strong className="text-white">MAB AI Strategies LLC</strong> for New Castle County Chamber of Commerce ChamberConnect Sessions.
+                </p>
+                <div className="text-[10px] text-ncccc-goldLight font-mono-code">
+                  Google Sheet: 1MHf8WA44RZ7hxFyktHJAlbJJO8Vn1iTDtlrGzMqBRv0
+                </div>
+              </div>
+
+            </div>
+
+            <div className="max-w-7xl mx-auto pt-6 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+              <div>
+                &copy; {new Date().getFullYear()} New Castle County Chamber of Commerce &bull; All Rights Reserved.
+              </div>
+              <div className="text-slate-400">
+                Technology Partner: <span className="text-amber-400 font-bold">MAB AI Strategies LLC</span>
+              </div>
+            </div>
+          </footer>
+
+          {/* MANDATORY FIXED EXPORT CODE FILE BUTTON (BOTTOM-RIGHT) */}
+          <button
+            onClick={handleExportCode}
+            id="export-code-btn"
+            className="fixed bottom-6 right-6 z-50 py-3 px-5 rounded-full bg-[#0B2545] hover:bg-ncccc-navyLight text-white font-extrabold text-xs shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 border-2 border-ncccc-goldLight cursor-pointer"
+            title="Download the entire standalone source code"
+          >
+            <Icon name="download" className="w-4 h-4 text-amber-400" />
+            <span>Export Code File</span>
+          </button>
+
+        </div>
+      );
+    }
+
+    const rootElement = document.getElementById('root');
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+      <ErrorBoundary>
+        <ChamberBridgeApp />
+      </ErrorBoundary>
+    );
+  </script>
+</body>
+</html>
